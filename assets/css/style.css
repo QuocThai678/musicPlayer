@@ -132,6 +132,7 @@ header h2 {
     border-radius: 8px;
     display: flex;
     align-items: center;
+    transition: all 0.2s ease;
 }
 
 .song:active {

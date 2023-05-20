@@ -1,5 +1,7 @@
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
+const PLAYER_STORAGE_KEY = 'F8_PLAYER '
+
 const heading = $('header h2')
 const cdThumb = $('.cd-thumb')
 const audio = $('#audio')
@@ -11,12 +13,20 @@ const progressWrap = $('.input-wrap')
 const preBtn = $('.btn-prev')
 const nextBtn = $('.btn-next')
 const randomBtn = $('.btn-random')
-
+const repeatBtn = $('.btn-repeat')
+const playList = $('.playlist')
 const app = {
+    preSong: 0,
     currentIndex: 0,
     isPlaying: false,
     isDraging: false,
     isRandom: false,
+    isRepeat: false,
+    config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+    setConfig: function(key, value) {
+        this.config[key] = value
+        localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config))
+    },
     songs: [
         {
             name: 'Đông',
@@ -90,9 +100,9 @@ const app = {
         
     ],
     render: function(){
-        const htmls = this.songs.map(song => {
+        const htmls = this.songs.map((song, index) => {
             return `
-                <div class="song">
+                <div id= "song-${index}" class="song ${index === this.currentIndex ? 'active' : ''}" data-index = "${index}">
                     <div class="thumb" style="background-image: url(${song.image})"></div>
                     
                     <div class="body">
@@ -106,7 +116,7 @@ const app = {
                 </div>
             `
         })
-        $('.playlist').innerHTML = htmls.join('');
+        playList.innerHTML = htmls.join('');
     },
     defineProperties: function () {
         Object.defineProperty(this, 'currentSong', {
@@ -190,25 +200,22 @@ const app = {
                 nextBtn.onclick = function() {
                     if (_this.isRandom) {
                         _this.randomSongs()
-                        audio.play()
                     }
                     else {
                         _this.nextSong()
-                        audio.play()
                     }
+                    audio.play()
                 }
     
                 // Khi bấm vào nút chuyển về bài hát trước đó
                 preBtn.onclick = function() {
                     if (_this.isRandom) {
                         _this.randomSongs()
-                        audio.play()
                     }
                     else {
-                        _this.preSong()
-                        audio.play()
+                        _this.backSong()
                     }
-                   
+                    audio.play()
                 }
     
                 // Khi bấm vào nút phát bài hát ngẫu nhiên
@@ -238,117 +245,163 @@ const app = {
             else {
                 audio.play()
             }
-
+        }
             
             
-            // Khi bài hát được phát
-            audio.onplay = function () {
-                _this.isPlaying = true
-                container.classList.add('playing')
-                cdThumbAnimate.play()
+        // Khi bài hát được phát
+        audio.onplay = function () {
+            _this.isPlaying = true
+            container.classList.add('playing')
+            cdThumbAnimate.play()
+        }
+
+        // Khi bài hát bị tạm dừng
+        audio.onpause = function () {
+            _this.isPlaying = false
+            container.classList.remove('playing')
+            cdThumbAnimate.pause()
+        }
+
+
+        // Khi tiến độ bài hát thay đổi 
+        audio.ontimeupdate = function () {
+            if (audio.duration) {
+                const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
+                progress.value = progressPercent
+
             }
+        }
 
-            // Khi bài hát bị tạm dừng
-            audio.onpause = function () {
-                _this.isPlaying = false
-                container.classList.remove('playing')
-                cdThumbAnimate.pause()
+    
+        // Xử lý khi tua bài hát
+        progress.oninput = function (e) {
+            // Xử lý isDraging
+            progress.onmousedown = function () {
+                console.log(Math.random())
             }
-
-
-            // Khi tiến độ bài hát thay đổi 
-            audio.ontimeupdate = function () {
-                if (audio.duration) {
-                    const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
-                    progress.value = progressPercent
-
-                }
+            progress.onmouseup = function () {
+                console.log(Math.random())
             }
-
-        
-            // Xử lý khi tua bài hát
-            progress.oninput = function (e) {
-                // Xử lý isDraging
-                progress.onmousedown = function () {
-                    console.log(Math.random())
-                }
-                progress.onmouseup = function () {
-                    console.log(Math.random())
-                }
-                const seekTime = e.target.value * (audio.duration / 100);
-                audio.currentTime = seekTime
+            const seekTime = e.target.value * (audio.duration / 100);
+            audio.currentTime = seekTime
+        }
+        var songPlayed = [_this.currentIndex]
+        function songsPlayed () {
+            if (songPlayed.length < _this.songs.length -1) {
+                songPlayed.push(_this.currentIndex)
             }
-            var songPlayed = [_this.currentIndex]
-            function songsPlayed () {
-                if (songPlayed.length < _this.songs.length -1) {
-                    songPlayed.push(_this.currentIndex)
-                }
-                else {
-                    songPlayed = [_this.currentIndex];
-                }
+            else {
+                songPlayed = [_this.currentIndex];
             }
-            // Khi bấm vào nút chuyển đến bài hát kế tiếp
-            nextBtn.onclick = function() {
-                if (_this.isRandom) {
-                    do {
-                        _this.randomSongs()
-                        audio.play()
-
-                    }while(songPlayed.includes(_this.currentIndex))
-                }
-                else {
-                    _this.nextSong()
+        }
+        // Khi bấm vào nút chuyển đến bài hát kế tiếp
+        nextBtn.onclick = function() {
+            if (_this.isRandom) {
+                do {
+                    _this.randomSongs()
                     audio.play()
-                }
-                songsPlayed()
-                
+
+                }while(songPlayed.includes(_this.currentIndex))
             }
-
-            // Khi bấm vào nút chuyển về bài hát trước đó
-            preBtn.onclick = function() {
-                if (_this.isRandom) {
-                    do {
-                        _this.randomSongs()
-                        audio.play()
-
-                    }while(songPlayed.includes(_this.currentIndex))
-                }
-                else {
-                    _this.preSong()
-                    audio.play()
-                }
-                songsPlayed()
-                console.log(songPlayed)
-               
+            else {
+                _this.nextSong()
+                audio.play()
             }
-
-            // Khi bấm vào nút phát bài hát ngẫu nhiên
-            randomBtn.onclick = function () {
-                _this.isRandom = !_this.isRandom;
-               randomBtn.classList.toggle('active', _this.isRandom)
-            }    
-
-            // Xử lý chuyển bài khi hết nhạc 
-            audio.onended = function () {
-                if (_this.isRandom) {
-                    do {
-                        _this.randomSongs()
-                        audio.play()
-
-                    }while(songPlayed.includes(_this.currentIndex))
-                }
-                else {
-                    _this.nextSong()
-                    audio.play()
-                }
-                songsPlayed()
-            }
-
+            songsPlayed()
+            _this.scrollToActiveSong()
             
         }
 
+        // Khi bấm vào nút chuyển về bài hát trước đó
+        preBtn.onclick = function() {
+            if (_this.isRandom) {
+                do {
+                    _this.randomSongs()
+                    audio.play()
+
+                }while(songPlayed.includes(_this.currentIndex))
+            }
+            else {
+                _this.backSong()
+                audio.play()
+            }
+            songsPlayed()
+            _this.scrollToActiveSong()
+        }
+
+        // Khi bấm vào nút phát bài hát ngẫu nhiên
+        randomBtn.onclick = function () {
+            if (_this.isRepeat) {
+                repeatBtn.classList.remove('active')
+                _this.isRepeat = false
+                _this.setConfig('isRepeat', _this.isRepeat)
+
+            }
+            _this.isRandom = !_this.isRandom;
+            _this.setConfig('isRandom', _this.isRandom)
+            randomBtn.classList.toggle('active', _this.isRandom)
+        } 
+        
+        // Khi bấm vào nút lặp lại bài hát 
+        repeatBtn.onclick = function () {
+            if (_this.isRandom) {
+                randomBtn.classList.remove('active')
+                _this.isRandom = false
+                _this.setConfig('isRandom', _this.isRandom)
+
+            }
+            _this.isRepeat = !_this.isRepeat;
+            _this.setConfig('isRepeat', _this.isRepeat)
+            repeatBtn.classList.toggle('active', _this.isRepeat)
+        }
+
+        // Xử lý chuyển bài khi hết nhạc 
+        audio.onended = function () {
+            if (_this.isRandom) {
+                do {
+                    _this.randomSongs()
+                    audio.play()
+
+                }while(songPlayed.includes(_this.currentIndex))
+            }
+            
+            else if (_this.isRepeat) {
+                audio.play()
+            }
+            else {
+                _this.nextSong()
+                audio.play()
+            }
+            songsPlayed()
+        }
+        //  Lắng nghe hành vi chọn vào cả danh sách bài hát (thẻ cha)
+        $('.playlist').onclick = function (e) {
+            const songNode = e.target.closest('.song:not(.active')
+            // Xử lý khi chọn để phát bài hát trong danh sách phát
+            _this.preSong = _this.currentIndex
+            if( songNode) {
+                _this.currentIndex = Number(songNode.dataset.index)
+                $(`#song-${_this.preSong}`).classList.remove('active')
+                $(`#song-${_this.currentIndex}`).classList.add('active')
+                _this.loadCurrenSongs()
+                audio.play()
+            }
+            
+        }
+    },
+    scrollToActiveSong: function () {
+        setTimeout ( () => {
+            $('.song.active').scrollIntoView({
+                behavior: "smooth",
+                block: "end"
+            })
+        }, 300) 
     },
     
+    loadConfig: function () {
+        this.isRandom = this.config.isRandom
+        this.isRepeat = this.config.isRepeat
+    },
 
     loadCurrenSongs: function () {
         heading.textContent = this.currentSong.name
@@ -358,16 +411,24 @@ const app = {
 
     nextSong: function () {
         this.currentIndex++
+        this.preSong = this.currentIndex -1;
         if(this.currentIndex >= this.songs.length) {
             this.currentIndex = 0
-        }
+            this.preSong = this.songs.length -1;
+        }   
+        $(`#song-${this.preSong}`).classList.remove('active')
+        $(`#song-${this.currentIndex}`).classList.add('active')
         this.loadCurrenSongs()
     },
-    preSong: function () {
+    backSong: function () {
         this.currentIndex--
+        this.preSong = this.currentIndex + 1;
         if(this.currentIndex < 0) {
             this.currentIndex = this.songs.length -1
+            this.preSong = 0
         }
+        $(`#song-${this.preSong}`).classList.remove('active')
+        $(`#song-${this.currentIndex}`).classList.add('active')
         this.loadCurrenSongs()
     },
 
@@ -377,11 +438,15 @@ const app = {
             this.currentIndex = Math.floor(Math.random() * this.songs.length)
         }
         while (currentIndexSong === this.currentIndex )
+       $(`#song-${currentIndexSong}`).classList.remove('active')
+       $(`#song-${this.currentIndex}`).classList.add('active')
         this.loadCurrenSongs()  
     },
     
     
     start: function() {
+        // Gán cấu hình từ config vào ứng dụng 
+        this.loadConfig()
         // Định nghĩa các thuộc tính cho object
         this.defineProperties()
         // Lắng nghe / Xử lý các sự kiện (DOM events)
@@ -392,6 +457,10 @@ const app = {
         
         // Render playlist
         this.render()
+        
+        // Hiển thị trạng thái ban đầu của nút lập lại và ngẫu nhiên 
+        randomBtn.classList.toggle('active', this.isRandom)
+        repeatBtn.classList.toggle('active', this.isRepeat)
     },
 }
 
