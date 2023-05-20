@@ -15,6 +15,8 @@ const nextBtn = $('.btn-next')
 const randomBtn = $('.btn-random')
 const repeatBtn = $('.btn-repeat')
 const playList = $('.playlist')
+const currentTimeSong = $('.current-song')
+const durationSong = $('.duration-song')
 const app = {
     preSong: 0,
     currentIndex: 0,
@@ -145,6 +147,8 @@ const app = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
+        
+
 
         
         // Xử lý khi ấn phát bài hát
@@ -178,7 +182,7 @@ const app = {
                     if (audio.duration) {
                         const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
                         progress.value = progressPercent
-    
+                        
                     }
                 }
     
@@ -253,6 +257,7 @@ const app = {
             _this.isPlaying = true
             container.classList.add('playing')
             cdThumbAnimate.play()
+
         }
 
         // Khi bài hát bị tạm dừng
@@ -268,7 +273,10 @@ const app = {
             if (audio.duration) {
                 const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
                 progress.value = progressPercent
+                // Cập nhật phút của bài hát
 
+                durationSong.textContent = _this.getTimeSong() 
+                currentTimeSong.textContent = _this.getTimeCurrentSong()
             }
         }
 
@@ -397,6 +405,19 @@ const app = {
             })
         }, 300) 
     },
+    getTimeSong: function () {
+        const timeSong = audio.duration;
+        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
+        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
+        return finnal = `${minuteSong} : ${secondSong}`
+    },
+    getTimeCurrentSong: function () {
+        const timeSong = audio.currentTime;
+        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
+        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
+        return finnal = `${minuteSong} : ${secondSong}`
+    },
+   
     
     loadConfig: function () {
         this.isRandom = this.config.isRandom
