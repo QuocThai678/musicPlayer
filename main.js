@@ -17,9 +17,14 @@ const repeatBtn = $('.btn-repeat')
 const playList = $('.playlist')
 const currentTimeSong = $('.current-song')
 const durationSong = $('.duration-song')
+const progressValue = $('.progress-value-song')
+const progressThumb = $('.progress-value-thumb')
 const app = {
     preSong: 0,
     currentIndex: 0,
+    progressPercent: 0,
+    progressMousePercent: 0,
+    timeCurrentMouse: 0,
     isPlaying: false,
     isDraging: false,
     isRandom: false,
@@ -147,101 +152,20 @@ const app = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
-        
-
-
-        
-        // Xử lý khi ấn phát bài hát
         document.onkeydown = function (e) {
-            e.preventDefault()
-            if (e.which === 32 || e.which === 13){
+            if(e.which === 32 || e.which === 13) {
+                e.preventDefault()
                 if (_this.isPlaying) {
                     audio.pause()
                 }
                 else {
                     audio.play()
                 }
-                
-                // Khi bài hát được phát
-                audio.onplay = function () {
-                    _this.isPlaying = true
-                    container.classList.add('playing')
-                    cdThumbAnimate.play()
-                }
-    
-                // Khi bài hát bị tạm dừng
-                audio.onpause = function () {
-                    _this.isPlaying = false
-                    container.classList.remove('playing')
-                    cdThumbAnimate.pause()
-                }
-    
-    
-                // Khi tiến độ bài hát thay đổi 
-                audio.ontimeupdate = function () {
-                    if (audio.duration) {
-                        const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
-                        progress.value = progressPercent
-                        
-                    }
-                }
-    
-            
-                // Xử lý khi tua bài hát
-                progress.oninput = function (e) {
-                    // Xử lý isDraging
-                    progress.onmousedown = function () {
-                        console.log(Math.random())
-                    }
-                    progress.onmouseup = function () {
-                        console.log(Math.random())
-                    }
-                    const seekTime = e.target.value * (audio.duration / 100);
-                    audio.currentTime = seekTime
-                }
-    
-                // Khi bấm vào nút chuyển đến bài hát kế tiếp
-                nextBtn.onclick = function() {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                    }
-                    else {
-                        _this.nextSong()
-                    }
-                    audio.play()
-                }
-    
-                // Khi bấm vào nút chuyển về bài hát trước đó
-                preBtn.onclick = function() {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                    }
-                    else {
-                        _this.backSong()
-                    }
-                    audio.play()
-                }
-    
-                // Khi bấm vào nút phát bài hát ngẫu nhiên
-                randomBtn.onclick = function () {
-                    _this.isRandom = !_this.isRandom;
-                   randomBtn.classList.toggle('active', _this.isRandom)
-                }    
-    
-                // Xử lý chuyển bài khi hết nhạc 
-                audio.onended = function () {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                        audio.play()
-                    }
-                    else {
-                        _this.nextSong()
-                        audio.play()
-                    }
-                }
-    
             }
+            
         }
+        
+        // Xử lý khi bấm phát bài hát 
         playBtn.onclick = function () {
             if (_this.isPlaying) {
                 audio.pause()
@@ -267,29 +191,41 @@ const app = {
             cdThumbAnimate.pause()
         }
 
+        // Khi bấm chuột vào thanh tiến độ bài hát đang phát
+
+        progress.onmousedown = function (e) {
+            _this.isDraging = true
+            _this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100) 
+            _this.timeCurrentMouse = Math.floor(_this.progressMousePercent * audio.duration / 100)
+            currentTimeSong.textContent = _this.getTimeMouseCurrent();
+            progressThumb.style.transform = `translateX(${_this.progressMousePercent}%)`
+            progressValue.style.width = _this.progressMousePercent + '%'
+            e.target.addEventListener('mousemove', _this.mouseSeeking) 
+        }
+
+        progress.onmouseup = function (e) {
+            _this.isDraging = false
+            e.target.removeEventListener('mousemove', _this.mouseSeeking) 
+        }
+
+
 
         // Khi tiến độ bài hát thay đổi 
         audio.ontimeupdate = function () {
-            if (audio.duration) {
-                const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
-                progress.value = progressPercent
+            _this.progressPercent =  Math.floor(audio.currentTime / audio.duration * 100)
+            if (audio.duration && !_this.isDraging) {
+                progress.value = _this.progressPercent
                 // Cập nhật phút của bài hát
-
                 durationSong.textContent = _this.getTimeSong() 
                 currentTimeSong.textContent = _this.getTimeCurrentSong()
+                progressThumb.style.transform = `translateX(${_this.progressPercent}%)`
+                progressValue.style.width = _this.progressPercent + '%'
             }
         }
 
-    
+        
         // Xử lý khi tua bài hát
-        progress.oninput = function (e) {
-            // Xử lý isDraging
-            progress.onmousedown = function () {
-                console.log(Math.random())
-            }
-            progress.onmouseup = function () {
-                console.log(Math.random())
-            }
+        progress.onchange = function (e) {
             const seekTime = e.target.value * (audio.duration / 100);
             audio.currentTime = seekTime
         }
@@ -382,6 +318,8 @@ const app = {
             }
             songsPlayed()
         }
+        
+
         //  Lắng nghe hành vi chọn vào cả danh sách bài hát (thẻ cha)
         $('.playlist').onclick = function (e) {
             const songNode = e.target.closest('.song:not(.active')
@@ -405,6 +343,21 @@ const app = {
             })
         }, 300) 
     },
+    
+    mouseSeeking: function (e) {
+        this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100) 
+        if (this.progressMousePercent > 0 && this.progressMousePercent <= 100) {
+            progressThumb.style.transform = `translateX(${this.progressMousePercent}%)`
+            progressValue.style.width = this.progressMousePercent + '%'
+            this.timeCurrentMouse = Math.floor(this.progressMousePercent * audio.duration / 100)
+            const timeSong = this.timeCurrentMouse;
+            const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
+            const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
+            const finnal = `${minuteSong} : ${secondSong}`
+            currentTimeSong.textContent = finnal
+        }
+    },
+    
     getTimeSong: function () {
         const timeSong = audio.duration;
         const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
@@ -413,6 +366,12 @@ const app = {
     },
     getTimeCurrentSong: function () {
         const timeSong = audio.currentTime;
+        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
+        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
+        return finnal = `${minuteSong} : ${secondSong}`
+    },
+    getTimeMouseCurrent: function () {
+        const timeSong = this.timeCurrentMouse;
         const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
         const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
         return finnal = `${minuteSong} : ${secondSong}`
