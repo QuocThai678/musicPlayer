@@ -149,12 +149,11 @@ const app = {
 
         
 
-
         
         // Xử lý khi ấn phát bài hát
         document.onkeydown = function (e) {
-            e.preventDefault()
             if (e.which === 32 || e.which === 13){
+                e.preventDefault()
                 if (_this.isPlaying) {
                     audio.pause()
                 }
@@ -175,71 +174,6 @@ const app = {
                     container.classList.remove('playing')
                     cdThumbAnimate.pause()
                 }
-    
-    
-                // Khi tiến độ bài hát thay đổi 
-                audio.ontimeupdate = function () {
-                    if (audio.duration) {
-                        const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
-                        progress.value = progressPercent
-                        
-                    }
-                }
-    
-            
-                // Xử lý khi tua bài hát
-                progress.oninput = function (e) {
-                    // Xử lý isDraging
-                    progress.onmousedown = function () {
-                        console.log(Math.random())
-                    }
-                    progress.onmouseup = function () {
-                        console.log(Math.random())
-                    }
-                    const seekTime = e.target.value * (audio.duration / 100);
-                    audio.currentTime = seekTime
-                }
-    
-                // Khi bấm vào nút chuyển đến bài hát kế tiếp
-                nextBtn.onclick = function() {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                    }
-                    else {
-                        _this.nextSong()
-                    }
-                    audio.play()
-                }
-    
-                // Khi bấm vào nút chuyển về bài hát trước đó
-                preBtn.onclick = function() {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                    }
-                    else {
-                        _this.backSong()
-                    }
-                    audio.play()
-                }
-    
-                // Khi bấm vào nút phát bài hát ngẫu nhiên
-                randomBtn.onclick = function () {
-                    _this.isRandom = !_this.isRandom;
-                   randomBtn.classList.toggle('active', _this.isRandom)
-                }    
-    
-                // Xử lý chuyển bài khi hết nhạc 
-                audio.onended = function () {
-                    if (_this.isRandom) {
-                        _this.randomSongs()
-                        audio.play()
-                    }
-                    else {
-                        _this.nextSong()
-                        audio.play()
-                    }
-                }
-    
             }
         }
         playBtn.onclick = function () {
@@ -270,7 +204,7 @@ const app = {
 
         // Khi tiến độ bài hát thay đổi 
         audio.ontimeupdate = function () {
-            if (audio.duration) {
+            if (audio.duration && !_this.isDraging) {
                 const progressPercent = Math.floor(audio.currentTime / audio.duration * 100)
                 progress.value = progressPercent
                 // Cập nhật phút của bài hát
@@ -280,18 +214,30 @@ const app = {
             }
         }
 
+        // Xử lý isDraging
+
+        progress.ontouchstart = function () {
+            _this.isDraging = true
+        }
+
+        progress.ontouchend = function () {
+            _this.isDraging = false
+        }
+
+        progress.onmousedown = function () {
+            _this.isDraging = true
+        }
+        progress.onmouseup = function () {
+            _this.isDraging = false
+        }
+
     
         // Xử lý khi tua bài hát
-        progress.oninput = function (e) {
-            // Xử lý isDraging
-            progress.onmousedown = function () {
-                console.log(Math.random())
+        progress.onchange = function (e) {
+            if (!_this.isDraging) {
+                const seekTime = e.target.value * (audio.duration / 100);
+                audio.currentTime = seekTime
             }
-            progress.onmouseup = function () {
-                console.log(Math.random())
-            }
-            const seekTime = e.target.value * (audio.duration / 100);
-            audio.currentTime = seekTime
         }
         var songPlayed = [_this.currentIndex]
         function songsPlayed () {
