@@ -18,7 +18,6 @@ const playList = $('.playlist')
 const currentTimeSong = $('.current-song')
 const durationSong = $('.duration-song')
 const progressValue = $('.progress-value-song')
-const progressThumb = $('.progress-value-thumb')
 const app = {
     preSong: 0,
     currentIndex: 0,
@@ -198,7 +197,6 @@ const app = {
             _this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100) 
             _this.timeCurrentMouse = Math.floor(_this.progressMousePercent * audio.duration / 100)
             currentTimeSong.textContent = _this.getTimeMouseCurrent();
-            progressThumb.style.transform = `translateX(${_this.progressMousePercent}%)`
             progressValue.style.width = _this.progressMousePercent + '%'
             e.target.addEventListener('mousemove', _this.mouseSeeking) 
         }
@@ -218,7 +216,6 @@ const app = {
                 // Cập nhật phút của bài hát
                 durationSong.textContent = _this.getTimeSong() 
                 currentTimeSong.textContent = _this.getTimeCurrentSong()
-                progressThumb.style.transform = `translateX(${_this.progressPercent}%)`
                 progressValue.style.width = _this.progressPercent + '%'
             }
         }
@@ -347,7 +344,6 @@ const app = {
     mouseSeeking: function (e) {
         this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100) 
         if (this.progressMousePercent > 0 && this.progressMousePercent <= 100) {
-            progressThumb.style.transform = `translateX(${this.progressMousePercent}%)`
             progressValue.style.width = this.progressMousePercent + '%'
             this.timeCurrentMouse = Math.floor(this.progressMousePercent * audio.duration / 100)
             const timeSong = this.timeCurrentMouse;
