@@ -105,9 +105,30 @@ header h2 {
     -webkit-appearance: none; 
     width: 100%; 
     background: transparent; 
-    opacity: 0.7;
+    opacity: 1;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-value{
+    height: 6px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: #d3d3d3;
+    position: relative;
+    top: -12.2px;
+}
+
+.progress-value-song {
+    position: absolute;
+    width: 0;
+    height: 6px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    top: 0;
+    left: 0;
 }
 
 #progress::-ms-track{
@@ -121,7 +142,7 @@ header h2 {
     width: 100%;
     height: 6px;
     cursor: pointer;
-    background-color: #d3d3d3;
+    background-color: transparent;
     border-radius: 5px;
 }
 #progess:focus {
@@ -136,6 +157,8 @@ header h2 {
     border-radius: 50%;
     cursor: pointer;
     margin-top: -3px;
+    position: relative;
+    left: -1px;
 }
 
 .time-song{
@@ -215,4 +238,11 @@ header h2 {
 .song .option{
     color: #999;
     padding: 0 8px;
+}
+
+
+@media (max-width: 740px) {
+    .progress-wrap {
+        padding: 8px 16px;
+    }
 }
