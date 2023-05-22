@@ -22,7 +22,6 @@ const app = {
     preSong: 0,
     currentIndex: 0,
     progressPercent: 0,
-    progressMousePercent: 0,
     currentTimeSeeking: 0,
     currentTimeSong: 0,
     isPlaying: false,
@@ -226,28 +225,17 @@ const app = {
 
         progress.ontouchstart = function (e) {
             _this.isDraging = true
-            const rect = e.target.getBoundingClientRect();
-            const offsetX = e.targetTouches[0].pageX - rect.left;
-            const offsetWidth = rect.right - rect.left
-            _this.progressMousePercent = Math.floor(offsetX / offsetWidth * 100)
-            progressValue.style.width = _this.progressMousePercent + '%'
-            e.target.addEventListener('touchmove', _this.mouseSeekingMobile)
         }
 
         progress.ontouchend = function (e) {
             _this.isDraging = false
-            e.target.removeEventListener('touchmove', _this.mouseSeekingMobile)
         }
 
         progress.onmousedown = function (e) {
-            _this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100)
-            progressValue.style.width = _this.progressMousePercent + '%'
-            e.target.addEventListener('mousemove', _this.mouseSeeking)
             _this.isDraging = true
         }
         progress.onmouseup = function (e) {
             _this.isDraging = false
-            e.target.removeEventListener('mousemove', _this.mouseSeeking)
         }
 
     
@@ -257,6 +245,13 @@ const app = {
                 const seekTime = e.target.value * (audio.duration / 100);
                 audio.currentTime = seekTime
             }
+        }
+
+        progress.oninput = function (e) {
+            progressValue.style.width = e.target.value + '%'
+            _this.currentTimeSeeking = Math.floor( e.target.value * audio.duration / 100)
+            currentTimeSong.textContent = _this.getTimeSeeking()
+            durationSong.textContent = _this.getTimeSong()
         }
         var songPlayed = [_this.currentIndex]
         function songsPlayed () {
@@ -364,44 +359,7 @@ const app = {
             
         }
     },
-    mouseSeekingMobile: function (e) {
-        const rect = e.target.getBoundingClientRect();
-        const offsetX = e.targetTouches[0].pageX - rect.left;
-        const offsetWidth = rect.right - rect.left
-        this.progressMousePercent = Math.floor(offsetX / offsetWidth * 100)
-        // Thời gian hiện tại khi kéo trên thanh tiến độ bài hát 
-        this.currentTimeSeeking = Math.floor(this.progressMousePercent * audio.duration / 100) 
-        const timeSong = this.currentTimeSeeking
-        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
-        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
-        const finnal = `${minuteSong} : ${secondSong}`
-        if (this.progressMousePercent <=  100 && this.progressMousePercent >= 0) {
-            progressValue.style.width = this.progressMousePercent + '%'
-            currentTimeSong.textContent = finnal
-            const timeSong = audio.duration;
-            const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
-            const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
-            durationSong.textContent = `${minuteSong} : ${secondSong}`
-        }
-    },
-    
-    mouseSeeking: function (e) {
-        console.log(audio)
-        this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100)
-        this.currentTimeSeeking = Math.floor(this.progressMousePercent * audio.duration / 100)
-        const timeSong = this.currentTimeSeeking
-        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
-        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
-        const finnal = `${minuteSong} : ${secondSong}`
-        if (this.progressMousePercent <=  100 && this.progressMousePercent >= 0) {
-            progressValue.style.width = this.progressMousePercent + '%'
-            currentTimeSong.textContent = finnal
-            const timeSong = audio.duration;
-            const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
-            const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
-            durationSong.textContent = `${minuteSong} : ${secondSong}`
-        }
-    },
+   
     scrollToActiveSong: function () {
         setTimeout ( () => {
             $('.song.active').scrollIntoView({
@@ -409,6 +367,12 @@ const app = {
                 block: "end"
             })
         }, 300) 
+    },
+    getTimeSeeking: function() {
+        const timeSong = this.currentTimeSeeking;
+        const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
+        const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
+        return finnal = `${minuteSong} : ${secondSong}`
     },
     getTimeSong: function () {
         const timeSong = audio.duration;
@@ -428,8 +392,8 @@ const app = {
     loadConfig: function () {
         this.isRandom = this.config.isRandom
         this.isRepeat = this.config.isRepeat
-        this.currentIndex = this.config.currentIndex
-        this.currentTimeSong = this.config.currentTimeSong
+        // this.currentIndex = this.config.currentIndex
+        // this.currentTimeSong = this.config.currentTimeSong
     },
 
     loadCurrenSongs: function () {
@@ -491,7 +455,7 @@ const app = {
         randomBtn.classList.toggle('active', this.isRandom)
         repeatBtn.classList.toggle('active', this.isRepeat)
         // Tải lại tiến độ của bài hát trước đó 
-        audio.currentTime = this.currentTimeSong
+        // audio.currentTime = this.currentTimeSong
     },
 }
 
