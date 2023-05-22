@@ -85,6 +85,7 @@ header h2 {
     font-size: 18px;
 }
 
+
 .btn.active {
     color: var(--primary-color);
 }
@@ -172,17 +173,11 @@ header h2 {
     line-height: 1.4;
 }
 
-.current-song{
-}
-
-.duration-song{
-    
-}
 
 
 .playlist {
     padding: 12px;
-    margin-top: 420px;
+    margin-top: 440px;
 
 }
 

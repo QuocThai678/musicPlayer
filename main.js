@@ -24,6 +24,7 @@ const app = {
     progressPercent: 0,
     progressMousePercent: 0,
     currentTimeSeeking: 0,
+    currentTimeSong: 0,
     isPlaying: false,
     isDraging: false,
     isRandom: false,
@@ -195,6 +196,7 @@ const app = {
             _this.isPlaying = true
             container.classList.add('playing')
             cdThumbAnimate.play()
+            _this.setConfig('currentIndex', _this.currentIndex)
 
         }
 
@@ -216,19 +218,20 @@ const app = {
                 durationSong.textContent = _this.getTimeSong() 
                 currentTimeSong.textContent = _this.getTimeCurrentSong()
             }
+            _this.setConfig('currentTimeSong', audio.currentTime)
         }
 
 
         // Xử lý isDraging
 
         progress.ontouchstart = function (e) {
+            _this.isDraging = true
             const rect = e.target.getBoundingClientRect();
             const offsetX = e.targetTouches[0].pageX - rect.left;
             const offsetWidth = rect.right - rect.left
             _this.progressMousePercent = Math.floor(offsetX / offsetWidth * 100)
             progressValue.style.width = _this.progressMousePercent + '%'
             e.target.addEventListener('touchmove', _this.mouseSeekingMobile)
-            _this.isDraging = true
         }
 
         progress.ontouchend = function (e) {
@@ -383,6 +386,7 @@ const app = {
     },
     
     mouseSeeking: function (e) {
+        console.log(audio)
         this.progressMousePercent = Math.floor(e.offsetX / e.target.offsetWidth * 100)
         this.currentTimeSeeking = Math.floor(this.progressMousePercent * audio.duration / 100)
         const timeSong = this.currentTimeSeeking
@@ -424,6 +428,8 @@ const app = {
     loadConfig: function () {
         this.isRandom = this.config.isRandom
         this.isRepeat = this.config.isRepeat
+        this.currentIndex = this.config.currentIndex
+        this.currentTimeSong = this.config.currentTimeSong
     },
 
     loadCurrenSongs: function () {
@@ -484,6 +490,8 @@ const app = {
         // Hiển thị trạng thái ban đầu của nút lập lại và ngẫu nhiên 
         randomBtn.classList.toggle('active', this.isRandom)
         repeatBtn.classList.toggle('active', this.isRepeat)
+        // Tải lại tiến độ của bài hát trước đó 
+        audio.currentTime = this.currentTimeSong
     },
 }
 
