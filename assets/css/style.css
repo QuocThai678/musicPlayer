@@ -92,7 +92,10 @@ header h2 {
 
 .control .btn-toggle-play {
     background-color: var(--primary-color);
-    padding: 18px;
+    height: 54px;
+    width: 54px;
+    justify-content: center;
+    align-items: center;
     color: #fff;
     border-radius: 50%;
     display: flex;
@@ -146,9 +149,6 @@ header h2 {
     background-color: transparent;
     border-radius: 5px;
 }
-#progess:focus {
-    outline: none;
-}
 
 .progress::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -173,12 +173,90 @@ header h2 {
     line-height: 1.4;
 }
 
+.volume-wrap {
+    margin: 0 auto;
+    width: 200px;
+    height: 50px;
+    color: #666;
+    font-size: 18px;
+}
 
+.volume-wrap .fa-volume-xmark {
+    display: none;
+}
+
+.volume-wrap.mute .fa-volume-xmark{
+    display:inline-block;
+}
+
+.volume-wrap.mute .fa-volume-low {
+    display: none;
+}
+
+#volume {
+    -webkit-appearance: none; 
+    width: 100%; 
+    background: transparent; 
+    opacity: 1;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s ease;
+    position: relative;
+    left: 22px;
+    padding: 12px 0;
+    top: -29px;
+    z-index: 1;
+}
+
+#volume::-ms-track{
+    width: 100%;
+    background: transparent; 
+    border-color: transparent;
+    color: transparent;
+}
+
+#volume::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+#volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -3px;
+    position: relative;
+    /* left: -1px; */
+}
+
+.volume-background {
+    width: 100%;
+    height: 6px;
+    background-color: #d3d3d3;
+    position: relative;
+    left: 12px;
+    top: -66.3px;    
+    left: 22px;
+    top: -54.3px;
+    border-radius: 5px;
+}
+
+.volume-value {
+    width: 100%;
+    height: 6px;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    position: relative;
+}
 
 .playlist {
     padding: 12px;
-    margin-top: 440px;
-
+    margin-top: 500px;
 }
 
 .song {

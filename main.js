@@ -18,16 +18,23 @@ const playList = $('.playlist')
 const currentTimeSong = $('.current-song')
 const durationSong = $('.duration-song')
 const progressValue = $('.progress-value-song')
+const volume = $('#volume')
+const volumeValue = $('.volume-value')
+const volumeWrap = $('.volume-wrap')
+const volumeIconOn = $('.volume-icon-on')
+const volumeIconOff =  $('.volume-icon-off')
 const app = {
     preSong: 0,
     currentIndex: 0,
     progressPercent: 0,
     currentTimeSeeking: 0,
     currentTimeSong: 0,
+    currentVolume: 100,
     isPlaying: false,
     isDraging: false,
     isRandom: false,
     isRepeat: false,
+    isMute: false,
     config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
     setConfig: function(key, value) {
         this.config[key] = value
@@ -167,6 +174,7 @@ const app = {
                 
                 // Khi bài hát được phát
                 audio.onplay = function () {
+                    _this.setConfig('currentIndex', _this.currentIndex)
                     _this.isPlaying = true
                     container.classList.add('playing')
                     cdThumbAnimate.play()
@@ -192,11 +200,10 @@ const app = {
             
         // Khi bài hát được phát
         audio.onplay = function () {
+            _this.setConfig('currentIndex', _this.currentIndex)
             _this.isPlaying = true
             container.classList.add('playing')
             cdThumbAnimate.play()
-            _this.setConfig('currentIndex', _this.currentIndex)
-
         }
 
         // Khi bài hát bị tạm dừng
@@ -216,8 +223,8 @@ const app = {
                 // Cập nhật phút của bài hát
                 durationSong.textContent = _this.getTimeSong() 
                 currentTimeSong.textContent = _this.getTimeCurrentSong()
+                _this.setConfig('currentTimeSong', audio.currentTime)
             }
-            _this.setConfig('currentTimeSong', audio.currentTime)
         }
 
 
@@ -344,6 +351,34 @@ const app = {
             }
             songsPlayed()
         }
+
+        // Xử lí khi bấm vào nút âm lượng 
+        volumeIconOn.onclick = function () {
+            _this.isMute = true
+            audio.volume = 0
+            volume.value = 0
+            volumeValue.style.width = volume.value + '%'
+            volumeWrap.classList.add('mute')
+        }
+        
+        volumeIconOff.onclick = function () {
+            _this.isMute = false
+            audio.volume = _this.currentVolume / 100
+            volume.value = _this.currentVolume 
+            volumeValue.style.width = volume.value + '%'
+            volumeWrap.classList.remove('mute')
+        }
+
+        // Xử lí khi bấm vào chỉnh âm lượng bài hát 
+        volume.oninput = function (e) {
+            _this.currentVolume = e.target.value
+            volumeValue.style.width = _this.currentVolume + '%';
+            audio.volume = _this.currentVolume / 100
+            audio.volume == 0 ? _this.isMute = true : _this.isMute = false
+            // Xử lí trạng thái tắt âm 
+            volumeWrap.classList.toggle('mute', _this.isMute)
+        }
+
         //  Lắng nghe hành vi chọn vào cả danh sách bài hát (thẻ cha)
         $('.playlist').onclick = function (e) {
             const songNode = e.target.closest('.song:not(.active')
@@ -356,7 +391,6 @@ const app = {
                 _this.loadCurrenSongs()
                 audio.play()
             }
-            
         }
     },
    
@@ -390,10 +424,10 @@ const app = {
    
     
     loadConfig: function () {
-        this.isRandom = this.config.isRandom
-        this.isRepeat = this.config.isRepeat
-        // this.currentIndex = this.config.currentIndex
-        // this.currentTimeSong = this.config.currentTimeSong
+        this.isRandom = typeof this.config.isRandom == 'undefined' ? false: this.config.isRandom
+        this.isRepeat = typeof this.config.isRepeat == 'undefined' ? false: this.config.isRepeat
+        this.currentIndex = typeof this.config.currentIndex == 'undefined' ? 0: this.config.currentIndex
+        this.currentTimeSong = typeof this.config.currentTimeSong == 'undefined' ? 0: this.config.currentTimeSong
     },
 
     loadCurrenSongs: function () {
@@ -455,7 +489,7 @@ const app = {
         randomBtn.classList.toggle('active', this.isRandom)
         repeatBtn.classList.toggle('active', this.isRepeat)
         // Tải lại tiến độ của bài hát trước đó 
-        // audio.currentTime = this.currentTimeSong
+        audio.currentTime = this.currentTimeSong
     },
 }
 
