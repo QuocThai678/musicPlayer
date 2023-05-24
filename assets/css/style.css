@@ -174,12 +174,19 @@ header h2 {
 }
 
 .volume-wrap {
-    margin: 0 auto;
-    width: 200px;
-    height: 50px;
+    margin-left: 8%;
+    margin-top: 10px;
+    width: 70px;
+    height: 30px;
     color: #666;
     font-size: 18px;
 }
+
+.volume-icon-on,
+.volume-icon-off {
+    margin-left: -8px;
+}
+
 
 .volume-wrap .fa-volume-xmark {
     display: none;
