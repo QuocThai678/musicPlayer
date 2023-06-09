@@ -109,7 +109,14 @@ const app = {
             singer: 'Minori Chihara',
             path: './assets/music/Michishirube.mp3',
             image: './assets/img/violet-evergarden.jpg',
-        }
+        },
+
+        {
+            name: 'Anh tự do nhưng cô đơn',
+            singer: 'Trung Quân',
+            path: './assets/music/anh-tu-do-nhung-co-don.mp3',
+            image: './assets/img/themaskedsinger.jpg',
+        },
         
     ],
     render: function(){
