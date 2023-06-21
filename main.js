@@ -117,6 +117,13 @@ const app = {
             path: './assets/music/anh-tu-do-nhung-co-don.mp3',
             image: './assets/img/themaskedsinger.jpg',
         },
+        {
+            name: 'Có hẹn với thanh xuân',
+            singer: 'Nhóm XHTDRLX2',
+            path: './assets/music/CoHenVoiThanhXuan.mp3',
+            image: './assets/img/forest-studio-moitinhdau.png',
+        },
+        
         
     ],
     render: function(){
