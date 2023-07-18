@@ -23,6 +23,9 @@ const volumeValue = $('.volume-value')
 const volumeWrap = $('.volume-wrap')
 const volumeIconOn = $('.volume-icon-on')
 const volumeIconOff =  $('.volume-icon-off')
+const addSong = $('.add-song')
+const modal = $('.modal')
+const overlay = $('.modal__overlay')
 const app = {
     preSong: 0,
     currentIndex: 0,
@@ -35,6 +38,7 @@ const app = {
     isRandom: false,
     isRepeat: false,
     isMute: false,
+    isModal: false,
     config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
     setConfig: function(key, value) {
         this.config[key] = value
@@ -123,7 +127,19 @@ const app = {
             path: './assets/music/CoHenVoiThanhXuan.mp3',
             image: './assets/img/forest-studio-moitinhdau.png',
         },
-        
+        {
+            name: 'Past lives',
+            singer: 'Sapientdream ',
+            path: './assets/music/PastLives.mp3',
+            image: './assets/img/PastLives.jpg',
+        },
+        {
+            name: 'Lạnh lẽo',
+            singer: 'Trương Bích Thần & Dương Tông Vỹ ',
+            path: './assets/music/LanhLeo.mp3',
+            image: './assets/img/LanhLeo.jpg',
+        },
+
         
     ],
     render: function(){
@@ -148,7 +164,7 @@ const app = {
     defineProperties: function () {
         Object.defineProperty(this, 'currentSong', {
             get: function () {
-                return this.songs[this.currentIndex]
+                return this.songs[this.currentIndex] ||  this.songs[0]
             }
         })
     },
@@ -177,7 +193,7 @@ const app = {
         
         // Xử lý khi ấn phát bài hát
         document.onkeydown = function (e) {
-            if (e.which === 32 || e.which === 13){
+            if ((e.which === 32 || e.which === 13) && !_this.isModal){
                 e.preventDefault()
                 if (_this.isPlaying) {
                     audio.pause()
@@ -391,6 +407,18 @@ const app = {
             audio.volume == 0 ? _this.isMute = true : _this.isMute = false
             // Xử lí trạng thái tắt âm 
             volumeWrap.classList.toggle('mute', _this.isMute)
+        }
+
+        // Xử lý khi bấm vào thêm bài hát
+
+        addSong.onclick = () => {
+            modal.classList.add('on')
+            _this.isModal= true
+        }
+
+        overlay.onclick = () => {
+            modal.classList.remove('on')
+            _this.isModal = false
         }
 
         //  Lắng nghe hành vi chọn vào cả danh sách bài hát (thẻ cha)

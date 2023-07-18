@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/./css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="#">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Music Player</title>
 </head>
+
 <body>
-   <div class="container">
+    <div class="container">
+
+        <div id="toast"></div>
+
         <!-- dashboard -->
 
         <div class="dashboard">
@@ -24,7 +31,8 @@
             <!-- cd -->
 
             <div class="cd">
-                <div class="cd-thumb" style="background-image: url(https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg) ;"></div>
+                <div class="cd-thumb"
+                    style="background-image: url(https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg) ;"></div>
             </div>
 
             <!-- control -->
@@ -50,7 +58,7 @@
                 </div>
 
 
-                
+
             </div>
             <div class="progress-wrap">
                 <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
@@ -64,26 +72,116 @@
                 </div>
             </div>
 
-            <div class="volume-wrap">
-                <i class="fa-solid fa-volume-low volume-icon-on"></i>
-                <i class="fa-solid fa-volume-xmark volume-icon-off"></i>
-                <input type="range" value="100" step="1" min="0" max="100" id="volume">
-                <div class="volume-background">
-                    <div class="volume-value"></div>
+            <div class="wrap-control">
+                <div class="volume-wrap">
+                    <i class="fa-solid fa-volume-low volume-icon-on"></i>
+                    <i class="fa-solid fa-volume-xmark volume-icon-off"></i>
+                    <input type="range" value="100" step="1" min="0" max="100" id="volume">
+                    <div class="volume-background">
+                        <div class="volume-value"></div>
+                    </div>
                 </div>
-                
+
+                <div class="add-song">
+                    <i class="icon-add fa-regular fa-plus"></i>
+                </div>
             </div>
 
+
         </div>
+
+
 
         <!-- Playlist -->
 
         <div class="playlist">
-            
+
         </div>
 
     </div>
-   </div>
-    <script src="./main.js" ></script>
-</body> 
+
+    <div class="modal">
+        <div class="modal__overlay"></div>
+
+        <div class="modal__body">
+            <div class="modal__inner">
+                <div class="auth-form">
+                    <form action="" method="POST" class="form" id="form-1">
+                        <h3 class="heading">Thêm bài hát</h3>
+
+                        <div class="spacer"></div>
+
+                        <div class="form-group">
+                            <label for="songname" class="form-label">Tên bài hát</label>
+                            <input id="songname" name="name" type="text" placeholder="VD: Một ngàn nỗi đau"
+                                class="form-control">
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="singer" class="form-label">Tên ca sĩ</label>
+                            <input id="singer" name="singer" type="text" placeholder="VD: Trúc Nhân"
+                                class="form-control">
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="path" class="form-label">Chọn bài hát cần thêm</label>
+                            <input id="path" name="path" type="file" class="form-control">
+                            <span class="form-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="thumbnail" class="form-label">Chọn thumbnail cho bài hát vừa thêm</label>
+                            <input id="thumbnail" name="image" type="file" class="form-control">
+                            <span class="form-message"></span>
+                        </div>
+
+                        <button class="form-submit">Thêm bài hát</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <script src="./assets/js/validator.js"></script>
+    <script src="./assets/js/toast.js" ></script>
+    <script src="./main.js"></script>
+
+    <script>
+        Validator({
+            form: '#form-1',
+            formGroupSelector: '.form-group',
+            errorElement: '.form-message',
+            rules: [
+                Validator.isRequired('#songname'),
+                Validator.isRequired('#singer'),
+                Validator.isRequired('#path'),
+                Validator.isRequired('#thumbnail'),
+            ],
+            onSubmit: function (value) {
+                const html = ` 
+                {
+                    name: '${value.name}',
+                    singer: '${value.singer}',
+                    path: '${value.path}',
+                    image: '${value.image}',
+                },
+                `
+                showInfoToast()
+                console.log(html)
+                app.songs.push(value)
+                app.render()
+            }
+        }) 
+    </script>
+</body>
+
 </html>
