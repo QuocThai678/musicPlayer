@@ -140,6 +140,42 @@ const app = {
             image: './assets/img/LanhLeo.jpg',
         },
 
+        {
+            name: 'spiral',
+            singer: 'LONGMAN',
+            path: './assets/music/openingseason2mushokutensei.mp3',
+            image: './assets/img/mushokutenseiseason2.jpg',
+        },
+
+        {
+            name: 'Tabun',
+            singer: 'YOASOBI',
+            path: './assets/music/Tabun-YOASOBI-7098399.mp3',
+            image: './assets/img/Tabun.webp',
+        },
+        
+
+        {
+            name: 'Tracing That Dream',
+            singer: 'YOASOBI',
+            path: './assets/music/TracingThatDream.mp3',
+            image: './assets/img/tracingthatdream.webp',
+        },
+          
+        {
+            name: 'Monster',
+            singer: 'YOASOBI',
+            path: './assets/music/Monster-YOASOBI-7124847.mp3',
+            image: './assets/img/monster.png',
+        },
+          
+        {
+            name: 'Idol',
+            singer: 'YOASOBI',
+            path: './assets/music/IdolOshiNoKoOpening-YOASOBI-9073746.mp3',
+            image: './assets/img/idol.jpg',
+        },
+        
         
     ],
     render: function(){
