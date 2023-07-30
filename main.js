@@ -175,6 +175,13 @@ const app = {
             path: './assets/music/IdolOshiNoKoOpening-YOASOBI-9073746.mp3',
             image: './assets/img/idol.jpg',
         },
+
+        {
+            name: 'Đôi Lời',
+            singer: 'Hoàng Dũng ',
+            path: './assets/music/DoiLoi-HoangDung-5754832.mp3',
+            image: './assets/img/Doi_Loi.jpg',
+        },
         
         
     ],
