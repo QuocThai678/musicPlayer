@@ -183,6 +183,12 @@ const app = {
             image: './assets/img/Doi_Loi.jpg',
         },
         
+        {
+            name: 'Không cần thêm một ai nữa',
+            singer: 'Mr.Siro ft BigDaddy',
+            path: './assets/music/KhongCanThemMotAiNua.mp3',
+            image: './assets/img/KhongCanThemMotAiNua.jpg',
+        },
         
     ],
     render: function(){
