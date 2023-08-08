@@ -189,6 +189,15 @@ const app = {
             path: './assets/music/KhongCanThemMotAiNua.mp3',
             image: './assets/img/KhongCanThemMotAiNua.jpg',
         },
+
+
+        {
+            name: 'Bae, Kajima',
+            singer: 'Undefined',
+            path: './assets/music/baekajima.mp3',
+            image: './assets/img/baekajima.jpg',
+        },
+        
         
     ],
     render: function(){
