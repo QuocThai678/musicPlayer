@@ -197,6 +197,14 @@ const app = {
             path: './assets/music/baekajima.mp3',
             image: './assets/img/baekajima.jpg',
         },
+
+        {
+            name: 'Mùa Xuân Đầu Tiên',
+            singer: 'Tama',
+            path: './assets/music/MuaXuanDauTien-Tama.mp3',
+            image: './assets/img/MuaXuanDauTien.jpg',
+        },
+        
         
         
     ],
