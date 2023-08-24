@@ -22,7 +22,7 @@ const volume = $('#volume')
 const volumeValue = $('.volume-value')
 const volumeWrap = $('.volume-wrap')
 const volumeIconOn = $('.volume-icon-on')
-const volumeIconOff =  $('.volume-icon-off')
+const volumeIconOff = $('.volume-icon-off')
 const addSong = $('.add-song')
 const modal = $('.modal')
 const overlay = $('.modal__overlay')
@@ -40,7 +40,7 @@ const app = {
     isMute: false,
     isModal: false,
     config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
-    setConfig: function(key, value) {
+    setConfig: function (key, value) {
         this.config[key] = value
         localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config))
     },
@@ -51,63 +51,63 @@ const app = {
             path: './assets/music/Dong-Truc-Nhan.mp3',
             image: './assets/img/dong.jpg',
         },
-    
+
         {
             name: 'Grand Escape',
             singer: 'RADWIMPS',
             path: './assets/music/Grand-Escape-RADWIMPS-Toko-Miura.mp3',
             image: './assets/img/Weathering-with-You.jpg',
         },
-    
+
         {
             name: 'Mơ',
             singer: 'Đức Phúc, Orange',
             path: './assets/music/Mo-OrangeDucPhuc-8276340.mp3',
             image: './assets/img/forest-studio-moitinhdau.png',
         },
-    
+
         {
             name: 'Một ngàn nỗi đau',
             singer: 'Văn Mai Hương, Orange',
             path: './assets/music/mot-ngan-noi-dau.mp3',
             image: './assets/img/forest-studio.jpg',
         },
-    
+
         {
             name: 'Nandemonaiya',
             singer: 'RADWIMPS',
             path: './assets/music/Nandemonaiya-Kimi-no-Na-wa-Your-Name-Your-Name.mp3',
             image: './assets/img/Sparkel.jpg',
         },
-    
+
         {
             name: 'Tệ thật anh nhớ em',
             singer: 'Orange',
             path: './assets/music/TeThatAnhNhoEm-ForestStudioOrange.mp3',
             image: './assets/img/forest-studio.jpg',
         },
-    
+
         {
             name: 'Thềm nhà có hoa',
             singer: 'Trúc Nhân, Văn Mai Hương',
             path: './assets/music/ThemNhaCoHoa-TrucNhanVanMaiHuongForestStudio-8317771.mp3',
             image: './assets/img/forest-studio.jpg',
         },
-    
+
         {
             name: 'Thu Cạn',
             singer: 'Trúc Nhân',
             path: './assets/music/ThuCan.mp3',
             image: './assets/img/forest-studio.jpg',
         },
-    
+
         {
             name: 'Sparkle',
             singer: 'RADWIMPS',
             path: './assets/music/Sparkle.mp3',
             image: './assets/img/Sparkel.jpg',
         },
-    
+
         {
             name: 'Michishirube',
             singer: 'Minori Chihara',
@@ -153,7 +153,7 @@ const app = {
             path: './assets/music/Tabun-YOASOBI-7098399.mp3',
             image: './assets/img/Tabun.webp',
         },
-        
+
 
         {
             name: 'Tracing That Dream',
@@ -161,14 +161,14 @@ const app = {
             path: './assets/music/TracingThatDream.mp3',
             image: './assets/img/tracingthatdream.webp',
         },
-          
+
         {
             name: 'Monster',
             singer: 'YOASOBI',
             path: './assets/music/Monster-YOASOBI-7124847.mp3',
             image: './assets/img/monster.png',
         },
-          
+
         {
             name: 'Idol',
             singer: 'YOASOBI',
@@ -182,7 +182,7 @@ const app = {
             path: './assets/music/DoiLoi-HoangDung-5754832.mp3',
             image: './assets/img/Doi_Loi.jpg',
         },
-        
+
         {
             name: 'Không cần thêm một ai nữa',
             singer: 'Mr.Siro ft BigDaddy',
@@ -204,11 +204,18 @@ const app = {
             path: './assets/music/MuaXuanDauTien-Tama.mp3',
             image: './assets/img/MuaXuanDauTien.jpg',
         },
-        
-        
-        
+
+
+        {
+            name: 'Wellerman',
+            singer: 'Nathan Evans ',
+            path: './assets/music/wellerman-sea-shanty.mp3',
+            image: './assets/img/Wellerman.jpg',
+        },
+
+
     ],
-    render: function(){
+    render: function () {
         const htmls = this.songs.map((song, index) => {
             return `
                 <div id= "song-${index}" class="song ${index === this.currentIndex ? 'active' : ''}" data-index = "${index}">
@@ -230,16 +237,16 @@ const app = {
     defineProperties: function () {
         Object.defineProperty(this, 'currentSong', {
             get: function () {
-                return this.songs[this.currentIndex] ||  this.songs[0]
+                return this.songs[this.currentIndex] || this.songs[0]
             }
         })
     },
-    handleEvents : function() {
+    handleEvents: function () {
         const _this = this
         const cdWidth = cd.offsetWidth
         // Xử lý CD quay / dừng 
         const cdThumbAnimate = cdThumb.animate([
-            {transform: 'rotate(360deg)'}
+            { transform: 'rotate(360deg)' }
         ], {
             duration: 10000,
             iterations: Infinity
@@ -254,12 +261,12 @@ const app = {
             cd.style.opacity = newCdWidth / cdWidth;
         }
 
-        
 
-        
+
+
         // Xử lý khi ấn phát bài hát
         document.onkeydown = function (e) {
-            if ((e.which === 32 || e.which === 13) && !_this.isModal){
+            if ((e.which === 32 || e.which === 13) && !_this.isModal) {
                 e.preventDefault()
                 if (_this.isPlaying) {
                     audio.pause()
@@ -267,7 +274,7 @@ const app = {
                 else {
                     audio.play()
                 }
-                
+
                 // Khi bài hát được phát
                 audio.onplay = function () {
                     _this.setConfig('currentIndex', _this.currentIndex)
@@ -275,7 +282,7 @@ const app = {
                     container.classList.add('playing')
                     cdThumbAnimate.play()
                 }
-    
+
                 // Khi bài hát bị tạm dừng
                 audio.onpause = function () {
                     _this.isPlaying = false
@@ -292,8 +299,8 @@ const app = {
                 audio.play()
             }
         }
-            
-            
+
+
         // Khi bài hát được phát
         audio.onplay = function () {
             _this.setConfig('currentIndex', _this.currentIndex)
@@ -317,7 +324,7 @@ const app = {
                 progress.value = _this.progressPercent
                 progressValue.style.width = _this.progressPercent + '%'
                 // Cập nhật phút của bài hát
-                durationSong.textContent = _this.getTimeSong() 
+                durationSong.textContent = _this.getTimeSong()
                 currentTimeSong.textContent = _this.getTimeCurrentSong()
                 _this.setConfig('currentTimeSong', audio.currentTime)
             }
@@ -341,7 +348,7 @@ const app = {
             _this.isDraging = false
         }
 
-    
+
         // Xử lý khi tua bài hát
         progress.onchange = function (e) {
             if (!_this.isDraging) {
@@ -352,13 +359,13 @@ const app = {
 
         progress.oninput = function (e) {
             progressValue.style.width = e.target.value + '%'
-            _this.currentTimeSeeking = Math.floor( e.target.value * audio.duration / 100)
+            _this.currentTimeSeeking = Math.floor(e.target.value * audio.duration / 100)
             currentTimeSong.textContent = _this.getTimeSeeking()
             durationSong.textContent = _this.getTimeSong()
         }
         var songPlayed = [_this.currentIndex]
-        function songsPlayed () {
-            if (songPlayed.length < _this.songs.length -1) {
+        function songsPlayed() {
+            if (songPlayed.length < _this.songs.length - 1) {
                 songPlayed.push(_this.currentIndex)
             }
             else {
@@ -366,13 +373,13 @@ const app = {
             }
         }
         // Khi bấm vào nút chuyển đến bài hát kế tiếp
-        nextBtn.onclick = function() {
+        nextBtn.onclick = function () {
             if (_this.isRandom) {
                 do {
                     _this.randomSongs()
                     audio.play()
 
-                }while(songPlayed.includes(_this.currentIndex))
+                } while (songPlayed.includes(_this.currentIndex))
             }
             else {
                 _this.nextSong()
@@ -380,17 +387,17 @@ const app = {
             }
             songsPlayed()
             _this.scrollToActiveSong()
-            
+
         }
 
         // Khi bấm vào nút chuyển về bài hát trước đó
-        preBtn.onclick = function() {
+        preBtn.onclick = function () {
             if (_this.isRandom) {
                 do {
                     _this.randomSongs()
                     audio.play()
 
-                }while(songPlayed.includes(_this.currentIndex))
+                } while (songPlayed.includes(_this.currentIndex))
             }
             else {
                 _this.backSong()
@@ -411,8 +418,8 @@ const app = {
             _this.isRandom = !_this.isRandom;
             _this.setConfig('isRandom', _this.isRandom)
             randomBtn.classList.toggle('active', _this.isRandom)
-        } 
-        
+        }
+
         // Khi bấm vào nút lặp lại bài hát 
         repeatBtn.onclick = function () {
             if (_this.isRandom) {
@@ -435,9 +442,9 @@ const app = {
                     _this.randomSongs()
                     audio.play()
 
-                }while(songPlayed.includes(_this.currentIndex))
+                } while (songPlayed.includes(_this.currentIndex))
             }
-            
+
             else if (_this.isRepeat) {
                 audio.play()
             }
@@ -456,11 +463,11 @@ const app = {
             volumeValue.style.width = volume.value + '%'
             volumeWrap.classList.add('mute')
         }
-        
+
         volumeIconOff.onclick = function () {
             _this.isMute = false
             audio.volume = _this.currentVolume / 100
-            volume.value = _this.currentVolume 
+            volume.value = _this.currentVolume
             volumeValue.style.width = volume.value + '%'
             volumeWrap.classList.remove('mute')
         }
@@ -479,7 +486,7 @@ const app = {
 
         addSong.onclick = () => {
             modal.classList.add('on')
-            _this.isModal= true
+            _this.isModal = true
         }
 
         overlay.onclick = () => {
@@ -492,7 +499,7 @@ const app = {
             const songNode = e.target.closest('.song:not(.active')
             // Xử lý khi chọn để phát bài hát trong danh sách phát
             _this.preSong = _this.currentIndex
-            if( songNode) {
+            if (songNode) {
                 _this.currentIndex = Number(songNode.dataset.index)
                 $(`#song-${_this.preSong}`).classList.remove('active')
                 $(`#song-${_this.currentIndex}`).classList.add('active')
@@ -501,16 +508,16 @@ const app = {
             }
         }
     },
-   
+
     scrollToActiveSong: function () {
-        setTimeout ( () => {
+        setTimeout(() => {
             $('.song.active').scrollIntoView({
                 behavior: "smooth",
                 block: "end"
             })
-        }, 300) 
+        }, 300)
     },
-    getTimeSeeking: function() {
+    getTimeSeeking: function () {
         const timeSong = this.currentTimeSeeking;
         const minuteSong = Math.floor(timeSong / 60).toString().padStart(2, '0')
         const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
@@ -528,14 +535,14 @@ const app = {
         const secondSong = Math.floor(timeSong - minuteSong * 60).toString().padStart(2, '0')
         return finnal = `${minuteSong} : ${secondSong}`
     },
-    
-   
-    
+
+
+
     loadConfig: function () {
-        this.isRandom = typeof this.config.isRandom == 'undefined' ? false: this.config.isRandom
-        this.isRepeat = typeof this.config.isRepeat == 'undefined' ? false: this.config.isRepeat
-        this.currentIndex = typeof this.config.currentIndex == 'undefined' ? 0: this.config.currentIndex
-        this.currentTimeSong = typeof this.config.currentTimeSong == 'undefined' ? 0: this.config.currentTimeSong
+        this.isRandom = typeof this.config.isRandom == 'undefined' ? false : this.config.isRandom
+        this.isRepeat = typeof this.config.isRepeat == 'undefined' ? false : this.config.isRepeat
+        this.currentIndex = typeof this.config.currentIndex == 'undefined' ? 0 : this.config.currentIndex
+        this.currentTimeSong = typeof this.config.currentTimeSong == 'undefined' ? 0 : this.config.currentTimeSong
     },
 
     loadCurrenSongs: function () {
@@ -546,11 +553,11 @@ const app = {
 
     nextSong: function () {
         this.currentIndex++
-        this.preSong = this.currentIndex -1;
-        if(this.currentIndex >= this.songs.length) {
+        this.preSong = this.currentIndex - 1;
+        if (this.currentIndex >= this.songs.length) {
             this.currentIndex = 0
-            this.preSong = this.songs.length -1;
-        }   
+            this.preSong = this.songs.length - 1;
+        }
         $(`#song-${this.preSong}`).classList.remove('active')
         $(`#song-${this.currentIndex}`).classList.add('active')
         this.loadCurrenSongs()
@@ -558,8 +565,8 @@ const app = {
     backSong: function () {
         this.currentIndex--
         this.preSong = this.currentIndex + 1;
-        if(this.currentIndex < 0) {
-            this.currentIndex = this.songs.length -1
+        if (this.currentIndex < 0) {
+            this.currentIndex = this.songs.length - 1
             this.preSong = 0
         }
         $(`#song-${this.preSong}`).classList.remove('active')
@@ -567,32 +574,32 @@ const app = {
         this.loadCurrenSongs()
     },
 
-    randomSongs: function() {
+    randomSongs: function () {
         const currentIndexSong = this.currentIndex;
         do {
             this.currentIndex = Math.floor(Math.random() * this.songs.length)
         }
-        while (currentIndexSong === this.currentIndex )
-       $(`#song-${currentIndexSong}`).classList.remove('active')
-       $(`#song-${this.currentIndex}`).classList.add('active')
-        this.loadCurrenSongs()  
+        while (currentIndexSong === this.currentIndex)
+        $(`#song-${currentIndexSong}`).classList.remove('active')
+        $(`#song-${this.currentIndex}`).classList.add('active')
+        this.loadCurrenSongs()
     },
-    
-    
-    start: function() {
+
+
+    start: function () {
         // Gán cấu hình từ config vào ứng dụng 
         this.loadConfig()
         // Định nghĩa các thuộc tính cho object
         this.defineProperties()
         // Lắng nghe / Xử lý các sự kiện (DOM events)
         this.handleEvents()
-        
+
         // Tải thông tin bài hát đầu tiên vào UI khi chạy ứng dụng
         this.loadCurrenSongs()
-        
+
         // Render playlist
         this.render()
-        
+
         // Hiển thị trạng thái ban đầu của nút lập lại và ngẫu nhiên 
         randomBtn.classList.toggle('active', this.isRandom)
         repeatBtn.classList.toggle('active', this.isRepeat)
@@ -601,4 +608,4 @@ const app = {
     },
 }
 
-app.start ()
+app.start()
