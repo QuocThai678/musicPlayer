@@ -214,6 +214,15 @@ const app = {
         },
 
 
+        {
+            name: 'Talking to the moon x Playdate',
+            singer: 'Bruno Mars x Melanie Martinez',
+            path: './assets/music/TalkingToTheMoonxPlayDate.mp3',
+            image: './assets/img/TalkingToTheMoonxPlayDate.jpg',
+        },
+        
+
+
     ],
     render: function () {
         const htmls = this.songs.map((song, index) => {
