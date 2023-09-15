@@ -220,7 +220,15 @@ const app = {
             path: './assets/music/TalkingToTheMoonxPlayDate.mp3',
             image: './assets/img/TalkingToTheMoonxPlayDate.jpg',
         },
-        
+
+
+        {
+            name: 'Buồn thì cứ khóc đi',
+            singer: 'Trúc Nhân x Orange',
+            path: './assets/music/BuonThiCuKhocDi.mp3',
+            image: './assets/img/BuonThiCuKhocDi.jpg',
+        },
+
 
 
     ],
