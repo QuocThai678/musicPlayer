@@ -229,6 +229,12 @@ const app = {
             image: './assets/img/BuonThiCuKhocDi.jpg',
         },
 
+        {
+            name: 'Thức giấc',
+            singer: ' Da LAB',
+            path: './assets/music/ThucGiac-DaLAB-7048212.mp3',
+            image: './assets/img/ThucGiac.jpg',
+        },
 
 
     ],
