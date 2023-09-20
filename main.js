@@ -236,6 +236,15 @@ const app = {
             image: './assets/img/ThucGiac.jpg',
         },
 
+        {
+            name: 'No Internet',
+            singer: '7UPPERCUTS, Seachains',
+            path: './assets/music/NoInternet-7UPPERCUTSSeachains-6903538.mp3',
+            image: './assets/img/nointernet.jpg',
+        },
+        
+        
+
 
     ],
     render: function () {
