@@ -243,6 +243,13 @@ const app = {
             image: './assets/img/nointernet.jpg',
         },
         
+        {
+            name: 'Chuyện đôi ta',
+            singer: 'Orange',
+            path: './assets/music/ChuyenDoiTa-Orange.mp3',
+            image: './assets/img/themaskedsinger.jpg',
+        },
+        
         
 
 
