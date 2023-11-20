@@ -249,6 +249,21 @@ const app = {
             path: './assets/music/ChuyenDoiTa-Orange.mp3',
             image: './assets/img/themaskedsinger.jpg',
         },
+
+        {
+            name: 'Không có lý do',
+            singer: 'Dương Bàn Vũ ft Lambert',
+            path: './assets/music/Khongcolydo.mp3',
+            image: './assets/img/Khongcolydo.jpg',
+        },
+        
+        {
+            name: 'Đôi bờ',
+            singer: 'Trúc Nhân',
+            path: './assets/music/Doibo.mp3',
+            image: './assets/img/Doibo.jpg',
+        },
+        
         
         
 
