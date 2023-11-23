@@ -264,6 +264,13 @@ const app = {
             image: './assets/img/Doibo.jpg',
         },
         
+        {
+            name: 'Introducing me',
+            singer: 'Nick Jonas',
+            path: './assets/music/introducing-me.mp3',
+            image: './assets/img/introducing-me.jpg',
+        },
+        
         
         
 
