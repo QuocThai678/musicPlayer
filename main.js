@@ -270,8 +270,13 @@ const app = {
             path: './assets/music/introducing-me.mp3',
             image: './assets/img/introducing-me.jpg',
         },
-        
-        
+
+        {
+            name: 'The way I loved you',
+            singer: 'Taylor Swift',
+            path: './assets/music/TheWayILovedYou.mp3',
+            image: './assets/img/TheWayILovedYou.jpg',
+        },
         
 
 
