@@ -277,6 +277,13 @@ const app = {
             path: './assets/music/TheWayILovedYou.mp3',
             image: './assets/img/TheWayILovedYou.jpg',
         },
+
+        {
+            name: 'Only',
+            singer: 'Lee Hi',
+            path: './assets/music/Only-LeeHi.mp3',
+            image: './assets/img/Only-LeeHi.jpg',
+        },
         
 
 
