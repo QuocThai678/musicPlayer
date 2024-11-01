@@ -31,7 +31,7 @@ html {
     max-width: 480px;
     width: 100%;
     top: 0;
-
+    z-index: 1;
 }
 
 header {
@@ -338,6 +338,7 @@ header h2 {
     display: flex;
     align-items: center;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 .song:active {
@@ -381,6 +382,12 @@ header h2 {
 .song .option{
     color: #999;
     padding: 0 8px;
+    font-size: 14px;
+    opacity: 0.5;
+}
+
+.option.pin {
+    opacity: 1;
 }
 
 

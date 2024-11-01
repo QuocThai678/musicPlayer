@@ -27,6 +27,7 @@ const addSong = $('.add-song')
 const modal = $('.modal')
 const overlay = $('.modal__overlay')
 const app = {
+    pinIndex: 0,
     preSong: 0,
     currentIndex: 0,
     progressPercent: 0,
@@ -170,13 +171,6 @@ const app = {
         },
 
         {
-            name: 'Idol',
-            singer: 'YOASOBI',
-            path: './assets/music/IdolOshiNoKoOpening-YOASOBI-9073746.mp3',
-            image: './assets/img/idol.jpg',
-        },
-
-        {
             name: 'Đôi Lời',
             singer: 'Hoàng Dũng ',
             path: './assets/music/DoiLoi-HoangDung-5754832.mp3',
@@ -284,6 +278,14 @@ const app = {
             path: './assets/music/Only-LeeHi.mp3',
             image: './assets/img/Only-LeeHi.jpg',
         },
+
+        {
+            name: 'Die With A Smile',
+            singer: 'Lady Gaga, Bruno Mars',
+            path: './assets/music/DieWithASmile.mp3',
+            image: './assets/img/DieWithASmile.jpg',
+        },
+        
         
 
 
@@ -300,7 +302,7 @@ const app = {
                     </div>
 
                     <div class="option">
-                        <i class="fas fa-ellipsis-h"></i>
+                        <i class="fa-solid fa-thumbtack"></i>
                     </div>
                 </div>
             `
@@ -569,18 +571,40 @@ const app = {
 
         //  Lắng nghe hành vi chọn vào cả danh sách bài hát (thẻ cha)
         $('.playlist').onclick = function (e) {
-            const songNode = e.target.closest('.song:not(.active')
+            const songNode = e.target.closest('.song:not(.active)')
+            const optionNode = e.target.closest('.option')
             // Xử lý khi chọn để phát bài hát trong danh sách phát
             _this.preSong = _this.currentIndex
-            if (songNode) {
-                _this.currentIndex = Number(songNode.dataset.index)
-                $(`#song-${_this.preSong}`).classList.remove('active')
-                $(`#song-${_this.currentIndex}`).classList.add('active')
-                _this.loadCurrenSongs()
-                audio.play()
+            if (songNode || optionNode) {
+                if(songNode && !optionNode) {
+                    _this.currentIndex = Number(songNode.dataset.index)
+                    $(`#song-${_this.preSong}`).classList.remove('active')
+                    $(`#song-${_this.currentIndex}`).classList.add('active')
+                    _this.loadCurrenSongs()
+                    audio.play()
+                }
+
+                if(optionNode) {
+                    if(optionNode.classList.contains('pin')) {
+                        optionNode.classList.remove('pin')
+
+                    }
+                    else {
+                        optionNode.classList.add('pin')
+                        _this.pinIndex = Number(optionNode.closest('.song').dataset.index)
+                        _this.moveOnTop(_this.pinIndex)
+                    }
+                }
             }
         }
     },
+    moveOnTop: function (indexSong) {
+        const [pinSong] = this.songs.splice(indexSong, 1)
+        this.songs.unshift(pinSong)
+        this.render()
+    }
+
+    ,
 
     scrollToActiveSong: function () {
         setTimeout(() => {
