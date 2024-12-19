@@ -285,9 +285,20 @@ const app = {
             path: './assets/music/DieWithASmile.mp3',
             image: './assets/img/DieWithASmile.jpg',
         },
-        
-        
 
+        {
+            name: 'Toku no komori no uta',
+            singer: 'Yuiko Ohara',
+            path: './assets/music/TokuNoKomoriNoUta.mp3',
+            image: './assets/img/mushokutensei.jpg',
+        },
+
+        {
+            name: 'Inori no uta',
+            singer: 'Yuiko Ohara',
+            path: './assets/music/Inorinouta.mp3',
+            image: './assets/img/mushokutensei.jpg',
+        },
 
     ],
     render: function () {
